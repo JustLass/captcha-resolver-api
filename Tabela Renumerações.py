@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from capsolver_solver import CaptchaSolver
 
 # --- CONFIGURAÇÕES ---
-CAPSOLVER_API_KEY = "CAP-36FA264BD96AAFF7969B1FC6488B5EBA1801BD6E746A5070ED00A30075D6B59F"
+CAPSOLVER_API_KEY = "CHAVE_API"
 URL_DO_SITE = "https://www.senado.leg.br/transparencia/rh/servidores/detalhe.asp?fcodigo=3855180&fvinculo=1"
 
 # --- INÍCIO DO SCRIPT ---

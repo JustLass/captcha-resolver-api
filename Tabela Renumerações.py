@@ -1,42 +1,46 @@
+# meu_scraper_principal.py
+
 import time
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from capsolver_solver import CaptchaSolver
 
 # --- CONFIGURAÇÕES ---
-
-CAPSOLVER_API_KEY = "CHAVE-API"
+CAPSOLVER_API_KEY = "CAP-36FA264BD96AAFF7969B1FC6488B5EBA1801BD6E746A5070ED00A30075D6B59F"
 URL_DO_SITE = "https://www.senado.leg.br/transparencia/rh/servidores/detalhe.asp?fcodigo=3855180&fvinculo=1"
 
 # --- INÍCIO DO SCRIPT ---
-
-# Inicialize o resolvedor
-try:
-    solver = CaptchaSolver(capsolver_api_key=CAPSOLVER_API_KEY)
-except ValueError as e:
-    print(f"Erro de configuração: {e}")
-    exit()
-
-# Inicie o seu driver do Selenium como de costume
+solver = CaptchaSolver(capsolver_api_key=CAPSOLVER_API_KEY)
 driver = webdriver.Chrome()
 driver.get(URL_DO_SITE)
 time.sleep(3)
 
-
 if solver.check_and_solve_captcha(driver):
-    # Se chegou aqui, a página está livre de CAPTCHA e pronta para o scraping
-    print("\n[Scraper Principal] Página pronta! A iniciar a extração de dados...")
+    print("\n[Scraper Principal] CAPTCHA resolvido ou ausente. A submeter o formulário...")
     
-    #
-    # COLOQUE O SEU CÓDIGO DE SCRAPING AQUI
-    # Exemplo: extrair o nome do servidor
-    #
+    # --- LÓGICA DE CLIQUE ADICIONADA AQUI ---
     try:
-        time.sleep(5) # Espera extra para os dados carregarem
-        nome_servidor = driver.find_element(By.XPATH, "//td[text()='Nome']/following-sibling::td").text
-        print(f"Nome do servidor encontrado: {nome_servidor}")
-    except Exception as e:
-        print(f"Não foi possível extrair os dados. Erro: {e}")
+        
+        # Tenta clicar no botão do reCAPTCHA
+        input('foi?')
+        driver.find_element(By.CSS_SELECTOR, 'input[value="Visualizar remuneração"]').click()
+        print("[Scraper Principal] Botão 'Visualizar remuneração' clicado.")
+    except:
+        try:
+            # Se não encontrar, tenta clicar no botão do CAPTCHA de imagem
+            driver.switch_to.frame('captcha')
+            driver.find_element(By.ID, 'btnSubmit').click()
+            print("[Scraper Principal] Botão 'Submit' do CAPTCHA de imagem clicado.")
+            driver.switch_to.default_content()
+        except Exception as e:
+            print(f"[Scraper Principal] Nenhum botão de submissão encontrado para clicar: {e}")
+    # --------------------------------
+
+    print("\n[Scraper Principal] Página pronta! A iniciar a extração de dados...")
+    # ... O seu código de scraping vem aqui ...
 
 else:
-    # Se a função retornou False, algo correu mal
     print("\n[Scraper Principal] A biblioteca não conseguiu resolver o CAPTCHA. A encerrar.")
+
+time.sleep(10)
+driver.quit()

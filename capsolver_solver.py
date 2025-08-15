@@ -1,5 +1,6 @@
 # capsolver_solver.py
 # Biblioteca reutilizável para detetar e resolver CAPTCHAs com Capsolver.
+# Versão 3.0 - Remove os cliques de submissão automáticos.
 
 import time
 import requests
@@ -85,7 +86,7 @@ class CaptchaSolver:
                 captcha_texto = solution.get("text")
                 print(f"[Solver] Solução: {captcha_texto}. A ser digitado no campo.")
                 driver.find_element(By.ID, 'txtTexto_captcha').send_keys(captcha_texto)
-                driver.find_element(By.ID, 'btnSubmit').click()
+                # CLIQUE REMOVIDO
                 return True
             return False
 
@@ -112,10 +113,9 @@ class CaptchaSolver:
 
                 if solution:
                     recaptcha_token = solution.get("gRecaptchaResponse")
-                    submit_button = driver.find_element(By.CSS_SELECTOR, 'input[value="Visualizar remuneração"]')
                     driver.execute_script(f"document.getElementById('g-recaptcha-response').innerHTML = '{recaptcha_token}';")
                     time.sleep(1)
-                    submit_button.click()
+                    # CLIQUE REMOVIDO
                     return True
                 return False
             
